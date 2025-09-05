@@ -9,6 +9,7 @@
 ###############################################################################
 import App
 import MissionLib
+import traceback
 
 #
 # This is where you would put Game level module globals
@@ -72,6 +73,8 @@ def Initialize(pGame):
         if pPlayer is None:
             pPlayer = MissionLib.CreatePlayerShip("Constitution", pSet, "player", None)
     except Exception, e:
+        App.CPyDebug(__name__).Print("CreatePlayerShip failed:")
+        traceback.print_exc()
         pPlayer = MissionLib.CreatePlayerShip("Constitution", pSet, "player", None)
 
     App.Game_SetPlayer(pPlayer)
