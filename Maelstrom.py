@@ -31,99 +31,104 @@ g_idPlayer				= App.NULL_ID
 #
 def Initialize(pGame):
     "Called Initialize and activate our Game"
-    #
-    # This is where you might set up your Game level module globals
-    # don't forget to declare them global so they aren't treated as
-    # Initialize() local functions.
-    #
-
-    # Set our Game level TGL
-    pGame.SetDatabase("data/TGL/Maelstrom/Maelstrom.tgl")
-
-    # Set the game name, for use with data files and such
-    App.g_kUtopiaModule.SetGameName("Maelstrom")
-
-    global g_bOrbitalFacilityHit
-    global iNumFreighters
-    global iNumFreightersDestroyed
-    global bGeronimoAlive, bZeissAlive
-    
-    # Flag set to true if Orbital Facility hit in E1M2
-    g_bOrbitalFacilityHit	= 0
-    
-    # Cardassian freighters created in E7M5 bonus.
-    iNumFreighters = 4
-    iNumFreightersDestroyed = 0 
-
-    # Start off Geronimo and San Francisco as alive.	
-    bGeronimoAlive 	= 1
-    bZeissAlive = 1
-
-    # Load SovereignBridge
     try:
-        import BridgeUtils
-        BridgeUtils.LoadBridge("SovereignBridge")
-    except Exception, e:
-        App.CPyDebug(__name__).Print("Error loading SovereignBridge:")
-        traceback.print_exc()
-
-    # Set CanonTitanA as the player’s ship
-    pSet = App.g_kSetManager.GetSet("bridge")
-    try:
-        pPlayer = MissionLib.CreatePlayerShip("CanonTitanA", pSet, "player", None)
-        if pPlayer is None:
+        #
+        # This is where you might set up your Game level module globals
+        # don't forget to declare them global so they aren't treated as
+        # Initialize() local functions.
+        #
+    
+        # Set our Game level TGL
+        pGame.SetDatabase("data/TGL/Maelstrom/Maelstrom.tgl")
+    
+        # Set the game name, for use with data files and such
+        App.g_kUtopiaModule.SetGameName("Maelstrom")
+    
+        global g_bOrbitalFacilityHit
+        global iNumFreighters
+        global iNumFreightersDestroyed
+        global bGeronimoAlive, bZeissAlive
+        
+        # Flag set to true if Orbital Facility hit in E1M2
+        g_bOrbitalFacilityHit	= 0
+        
+        # Cardassian freighters created in E7M5 bonus.
+        iNumFreighters = 4
+        iNumFreightersDestroyed = 0 
+    
+        # Start off Geronimo and San Francisco as alive.	
+        bGeronimoAlive 	= 1
+        bZeissAlive = 1
+    
+        # Load SovereignBridge
+        try:
+            import BridgeUtils
+            BridgeUtils.LoadBridge("SovereignBridge")
+        except Exception, e:
+            App.CPyDebug(__name__).Print("Error loading SovereignBridge:")
+            traceback.print_exc()
+    
+        # Set CanonTitanA as the player’s ship
+        pSet = App.g_kSetManager.GetSet("bridge")
+        try:
+            pPlayer = MissionLib.CreatePlayerShip("CanonTitanA", pSet, "player", None)
+            if pPlayer is None:
+                pPlayer = MissionLib.CreatePlayerShip("Constitution", pSet, "player", None)
+        except Exception, e:
+            App.CPyDebug(__name__).Print("CreatePlayerShip failed:")
+            traceback.print_exc()
             pPlayer = MissionLib.CreatePlayerShip("Constitution", pSet, "player", None)
-    except Exception, e:
-        App.CPyDebug(__name__).Print("CreatePlayerShip failed:")
-        traceback.print_exc()
-        pPlayer = MissionLib.CreatePlayerShip("Constitution", pSet, "player", None)
-
-    App.Game_SetPlayer(pPlayer)
-    g_idPlayer = pPlayer.GetObjID()
-    pPlayer.SetName("USS Liberty")
-
-    #
-    # This is where you might call code to play the opening cutscene 
-    #
-
-    #
-    # This is where you might setup handlers to listen for Episode
-    # completion events, to trigger Game events that are handled by
-    # loading up the next Episode and playing mid-game cutscenes
-    #
-    App.g_kEventManager.AddBroadcastPythonFuncHandler(App.ET_OBJECT_DESTROYED, 
-                                            pGame, __name__ + ".ObjectDestroyed")
-    App.g_kEventManager.AddBroadcastPythonFuncHandler(App.ET_SET_PLAYER,
-                                            pGame, __name__ + ".HandlePlayerChanged")
     
-    #
-    # Load the Game persistent stuff.
-    #
-
-    #
-    # Start up the music system.
-    #
-    SetupMusic(pGame)
-
-    # Load the Sounds for Tactical Station
-    import LoadTacticalSounds
-    LoadTacticalSounds.LoadSounds()
-
-
-    #
-    # Clear our SetManager and start loading the initial Episode
-    #
-    App.g_kSetManager.ClearRenderedSet()
-
-    # Check if there is an episode override, and if so, then
-    # use it.
-    pcOverride = App.g_kVarManager.GetStringVariable("Options", "EpisodeOverride")
-
-    if (pcOverride != ""):
-        pGame.LoadEpisode("Maelstrom." + pcOverride + "." + pcOverride)
-        App.g_kVarManager.SetStringVariable("Options", "EpisodeOverride", "")
-    else:
-        pGame.LoadEpisode("Maelstrom.Episode7.Episode7")
+        App.Game_SetPlayer(pPlayer)
+        g_idPlayer = pPlayer.GetObjID()
+        pPlayer.SetName("USS Liberty")
+    
+        #
+        # This is where you might call code to play the opening cutscene 
+        #
+    
+        #
+        # This is where you might setup handlers to listen for Episode
+        # completion events, to trigger Game events that are handled by
+        # loading up the next Episode and playing mid-game cutscenes
+        #
+        App.g_kEventManager.AddBroadcastPythonFuncHandler(App.ET_OBJECT_DESTROYED, 
+                                                pGame, __name__ + ".ObjectDestroyed")
+        App.g_kEventManager.AddBroadcastPythonFuncHandler(App.ET_SET_PLAYER,
+                                                pGame, __name__ + ".HandlePlayerChanged")
+        
+        #
+        # Load the Game persistent stuff.
+        #
+    
+        #
+        # Start up the music system.
+        #
+        SetupMusic(pGame)
+    
+        # Load the Sounds for Tactical Station
+        import LoadTacticalSounds
+        LoadTacticalSounds.LoadSounds()
+    
+    
+        #
+        # Clear our SetManager and start loading the initial Episode
+        #
+        App.g_kSetManager.ClearRenderedSet()
+    
+        # Check if there is an episode override, and if so, then
+        # use it.
+        pcOverride = App.g_kVarManager.GetStringVariable("Options", "EpisodeOverride")
+    
+        if (pcOverride != ""):
+            pGame.LoadEpisode("Maelstrom." + pcOverride + "." + pcOverride)
+            App.g_kVarManager.SetStringVariable("Options", "EpisodeOverride", "")
+        else:
+            pGame.LoadEpisode("Maelstrom.Episode7.Episode7")
+    except Exception:
+        App.CPyDebug(__name__).Print("Unhandled error in Initialize:")
+        traceback.print_exc()
+        raise
 
 
 
