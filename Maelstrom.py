@@ -62,8 +62,8 @@ def Initialize(pGame):
     try:
         import BridgeUtils
         BridgeUtils.LoadBridge("SovereignBridge")
-    except Exception as e:
-        print("Error loading SovereignBridge: " + str(e))
+    except Exception, e:
+        print "Error loading SovereignBridge:", e
 
     # Set CanonTitanA as the player’s ship
     pSet = App.g_kSetManager.GetSet("bridge")
@@ -71,7 +71,7 @@ def Initialize(pGame):
         pPlayer = MissionLib.CreatePlayerShip("CanonTitanA", pSet, "player", None)
         if pPlayer is None:
             pPlayer = MissionLib.CreatePlayerShip("Constitution", pSet, "player", None)
-    except Exception as e:
+    except Exception, e:
         pPlayer = MissionLib.CreatePlayerShip("Constitution", pSet, "player", None)
 
     App.Game_SetPlayer(pPlayer)
