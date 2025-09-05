@@ -9,6 +9,7 @@
 ###############################################################################
 import App
 import MissionLib
+import traceback
 
 #
 # This is where you would put Game level module globals
@@ -63,7 +64,8 @@ def Initialize(pGame):
         import BridgeUtils
         BridgeUtils.LoadBridge("SovereignBridge")
     except Exception, e:
-        print "Error loading SovereignBridge:", e
+        App.CPyDebug(__name__).Print("Error loading SovereignBridge:")
+        traceback.print_exc()
 
     # Set CanonTitanA as the player’s ship
     pSet = App.g_kSetManager.GetSet("bridge")
