@@ -9,7 +9,6 @@
 ###############################################################################
 import App
 import MissionLib
-import traceback
 
 #
 # This is where you would put Game level module globals
@@ -4796,5 +4795,6 @@ LoadTacticalSounds.LoadSounds()
 
 # Clear our SetManager and start loading the initial Episode
 App.g_kSetManager.ClearRenderedSet() 
+
 
 #
